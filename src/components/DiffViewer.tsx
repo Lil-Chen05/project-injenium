@@ -1,9 +1,10 @@
 import { diffArrays, diffWordsWithSpace } from "diff";
 import { Fragment, useMemo, useState } from "react";
 
-const COLLAPSE_THRESHOLD = 3;
+const TARGET_CONTEXT_CHARS = 100;
 
 type Paragraph = { label: string; body: string };
+type LegalChunk = { label: string; body: string; sourceIndex: number };
 type InlinePart = { op: "eq" | "add" | "del"; t: string };
 
 type Block =
@@ -11,7 +12,18 @@ type Block =
   | { kind: "changed"; label: string; old: InlinePart[]; new: InlinePart[] }
   | { kind: "added"; label: string; text: string }
   | { kind: "removed"; label: string; text: string }
-  | { kind: "identical-collapse"; paragraphs: Paragraph[] };
+  | { kind: "identical-collapse"; paragraphs: LegalChunk[] };
+
+type DiffEntry =
+  | {
+      kind: "equal";
+      chunks: LegalChunk[];
+      oldStart: number;
+      newStart: number;
+    }
+  | { kind: "changed"; label: string; old: InlinePart[]; new: InlinePart[] }
+  | { kind: "added"; label: string; text: string }
+  | { kind: "removed"; label: string; text: string };
 
 function splitParas(text: string): Paragraph[] {
   return text
@@ -26,6 +38,52 @@ function splitParas(text: string): Paragraph[] {
       const body = m ? (m[2] || para).trim() : para;
       return { label, body };
     });
+}
+
+function splitLegalUnits(body: string): string[] {
+  const protectedBody = body.replace(
+    /\b(s|ss|No|Nos|Art|para|subpara)\.\s+/gi,
+    (m) => m.replace(".", "<DOT>"),
+  );
+  return protectedBody
+    .split(/(?<=[.;:])\s+(?=(?:\(?[a-zA-Z0-9]+\)|[A-Z]))/g)
+    .map((part) => part.replaceAll("<DOT>", ".").trim())
+    .filter(Boolean);
+}
+
+function segmentLegalText(text: string): LegalChunk[] {
+  return splitParas(text).flatMap((p, sourceIndex) => {
+    const units = splitLegalUnits(p.body);
+    const baseLabel = p.label.replace(/\.$/, "");
+    return units.map((body, unitIndex) => ({
+      label: unitIndex === 0 ? p.label : `${baseLabel}.${unitIndex + 1}`,
+      body,
+      sourceIndex,
+    }));
+  });
+}
+
+function collectContextIndexes(
+  chunks: LegalChunk[],
+  materialIndexes: Set<number>,
+): Set<number> {
+  const context = new Set<number>();
+  for (const idx of materialIndexes) {
+    let chars = 0;
+    for (let i = idx - 1; i >= 0; i--) {
+      context.add(i);
+      chars += chunks[i].body.length;
+      if (chars >= TARGET_CONTEXT_CHARS) break;
+    }
+
+    chars = 0;
+    for (let i = idx + 1; i < chunks.length; i++) {
+      context.add(i);
+      chars += chunks[i].body.length;
+      if (chars >= TARGET_CONTEXT_CHARS) break;
+    }
+  }
+  return context;
 }
 
 function inlineParts(oldText: string, newText: string): {
@@ -47,78 +105,146 @@ function inlineParts(oldText: string, newText: string): {
 }
 
 export function buildDiffBlocks(oldText: string, newText: string): Block[] {
-  const left = splitParas(oldText);
-  const right = splitParas(newText);
+  const left = segmentLegalText(oldText);
+  const right = segmentLegalText(newText);
 
-  // diffArrays aligns paragraph runs across insertions/deletions correctly.
+  // diffArrays aligns legal text chunks across insertions/deletions correctly.
   const changes = diffArrays(left, right, {
-    comparator: (a, b) => (a as Paragraph).body === (b as Paragraph).body,
+    comparator: (a, b) => (a as LegalChunk).body === (b as LegalChunk).body,
   });
 
-  const blocks: Block[] = [];
+  const entries: DiffEntry[] = [];
+  const oldMaterialIndexes = new Set<number>();
+  const newMaterialIndexes = new Set<number>();
+  let oldCursor = 0;
+  let newCursor = 0;
 
   for (let i = 0; i < changes.length; i++) {
     const c = changes[i];
-    const ps = c.value as Paragraph[];
+    const chunks = c.value as LegalChunk[];
 
     if (!c.added && !c.removed) {
-      if (ps.length >= COLLAPSE_THRESHOLD) {
-        blocks.push({ kind: "identical-collapse", paragraphs: ps });
-      } else {
-        for (const p of ps) {
-          blocks.push({ kind: "unchanged", label: p.label, text: p.body });
-        }
-      }
+      entries.push({
+        kind: "equal",
+        chunks,
+        oldStart: oldCursor,
+        newStart: newCursor,
+      });
+      oldCursor += chunks.length;
+      newCursor += chunks.length;
       continue;
     }
 
     // Pair a removed run immediately followed by an added run as a sequence
-    // of word-level "changed" blocks (one per paired index).
+    // of word-level "changed" blocks (one per paired legal chunk).
     if (c.removed && i + 1 < changes.length && changes[i + 1].added) {
       const next = changes[i + 1];
-      const removedPs = ps;
-      const addedPs = next.value as Paragraph[];
-      const pairLen = Math.min(removedPs.length, addedPs.length);
+      const removedChunks = chunks;
+      const addedChunks = next.value as LegalChunk[];
+      const pairLen = Math.min(removedChunks.length, addedChunks.length);
       for (let k = 0; k < pairLen; k++) {
-        const L = removedPs[k];
-        const R = addedPs[k];
+        const L = removedChunks[k];
+        const R = addedChunks[k];
         const { oldParts, newParts } = inlineParts(L.body, R.body);
-        blocks.push({
+        entries.push({
           kind: "changed",
           label: R.label || L.label,
           old: oldParts,
           new: newParts,
         });
+        oldMaterialIndexes.add(oldCursor + k);
+        newMaterialIndexes.add(newCursor + k);
       }
       // Surplus removed (deletion-only at the end of the removed run)
-      for (let k = pairLen; k < removedPs.length; k++) {
-        blocks.push({
+      for (let k = pairLen; k < removedChunks.length; k++) {
+        const oldIndex = oldCursor + k;
+        oldMaterialIndexes.add(oldIndex);
+        entries.push({
           kind: "removed",
-          label: removedPs[k].label,
-          text: removedPs[k].body,
+          label: removedChunks[k].label,
+          text: removedChunks[k].body,
         });
       }
       // Surplus added (extra new paragraphs)
-      for (let k = pairLen; k < addedPs.length; k++) {
-        blocks.push({
+      for (let k = pairLen; k < addedChunks.length; k++) {
+        const newIndex = newCursor + k;
+        newMaterialIndexes.add(newIndex);
+        entries.push({
           kind: "added",
-          label: addedPs[k].label,
-          text: addedPs[k].body,
+          label: addedChunks[k].label,
+          text: addedChunks[k].body,
         });
       }
+      oldCursor += removedChunks.length;
+      newCursor += addedChunks.length;
       i += 1; // skip the paired added change
       continue;
     }
 
     if (c.added) {
-      for (const p of ps) {
-        blocks.push({ kind: "added", label: p.label, text: p.body });
+      for (let k = 0; k < chunks.length; k++) {
+        const newIndex = newCursor + k;
+        newMaterialIndexes.add(newIndex);
+        entries.push({
+          kind: "added",
+          label: chunks[k].label,
+          text: chunks[k].body,
+        });
       }
+      newCursor += chunks.length;
     } else if (c.removed) {
-      for (const p of ps) {
-        blocks.push({ kind: "removed", label: p.label, text: p.body });
+      for (let k = 0; k < chunks.length; k++) {
+        const oldIndex = oldCursor + k;
+        oldMaterialIndexes.add(oldIndex);
+        entries.push({
+          kind: "removed",
+          label: chunks[k].label,
+          text: chunks[k].body,
+        });
+      }
+      oldCursor += chunks.length;
+    }
+  }
+
+  const oldContextIndexes = collectContextIndexes(left, oldMaterialIndexes);
+  const newContextIndexes = collectContextIndexes(right, newMaterialIndexes);
+  const blocks: Block[] = [];
+
+  for (const entry of entries) {
+    if (entry.kind !== "equal") {
+      blocks.push(entry);
+      continue;
+    }
+
+    let collapsedRun: LegalChunk[] = [];
+    const flushCollapsedRun = () => {
+      if (collapsedRun.length > 0) {
+        blocks.push({
+          kind: "identical-collapse",
+          paragraphs: collapsedRun,
+        });
+        collapsedRun = [];
+      }
+    };
+
+    for (let k = 0; k < entry.chunks.length; k++) {
+      const chunk = entry.chunks[k];
+      const isContext =
+        oldContextIndexes.has(entry.oldStart + k) ||
+        newContextIndexes.has(entry.newStart + k);
+
+      if (isContext) {
+        flushCollapsedRun();
+        blocks.push({
+          kind: "unchanged",
+          label: chunk.label,
+          text: chunk.body,
+        });
+      } else {
+        collapsedRun.push(chunk);
       }
     }
+    flushCollapsedRun();
   }
 
   return blocks;
@@ -277,7 +403,7 @@ export function DiffViewer({
                   style={{ cursor: "pointer", userSelect: "none" }}
                   title="Click to expand"
                 >
-                  {b.paragraphs.length} identical paragraph
+                  {b.paragraphs.length} unchanged legal unit
                   {b.paragraphs.length === 1 ? "" : "s"}
                 </div>
               );
@@ -291,7 +417,7 @@ export function DiffViewer({
                   style={{ cursor: "pointer", userSelect: "none" }}
                   title="Click to collapse"
                 >
-                  Hide {b.paragraphs.length} identical paragraph
+                  Hide {b.paragraphs.length} unchanged legal unit
                   {b.paragraphs.length === 1 ? "" : "s"}
                 </div>
                 {b.paragraphs.map((p, j) => (
