@@ -34,6 +34,39 @@ clients/demo/
 
 Fake client profiles for demonstrations.
 
+```text
+bills/45-1/{bill-number}/
+```
+
+Actual bill content from Parliament.
+
+Each retrieved bill folder contains:
+
+```text
+metadata.json          LEGISinfo detail JSON
+bill.xml               official Parliament bill text XML
+bill.normalized.json   normalized title, sponsor, full text, and clauses
+source.json            URLs, stage, and retrieval timestamp
+```
+
+```text
+bills/45-1/manifest.json
+```
+
+Retrieval manifest for the recommended bill text set.
+
+```text
+laws/food-and-drugs-act/
+```
+
+Current consolidated law baseline from Justice Laws.
+
+```text
+current.xml             official Justice Laws XML
+current.normalized.json normalized full text and sections
+source.json             source URLs and retrieval timestamp
+```
+
 ## Recommended Data Pipeline
 
 ```text
@@ -107,17 +140,38 @@ Justice Laws current Act XML
 
 Immediately convert legal XML into normalized JSON before AI analysis or UI rendering.
 
-## Next Data Files To Add
+## Refresh Commands
 
-For a selected demo bill, add:
+Retrieve the recommended bill text set:
 
 ```text
-data/bills/45-1/S-202/metadata.json
-data/bills/45-1/S-202/bill.xml
-data/bills/45-1/S-202/bill.normalized.json
+node --use-system-ca scripts/retrieve-bill-texts.mjs
+```
+
+Retrieve every bill with an available text ID:
+
+```text
+node --use-system-ca scripts/retrieve-bill-texts.mjs --all
+```
+
+Retrieve a small smoke-test sample:
+
+```text
+node --use-system-ca scripts/retrieve-bill-texts.mjs --limit 3
+```
+
+Refresh the current Food and Drugs Act:
+
+```text
+node --use-system-ca scripts/retrieve-law.mjs food-and-drugs-act
+```
+
+## Next Data Files To Add
+
+For comparison output, add generated files beside the current law baseline:
+
+```text
+data/laws/food-and-drugs-act/versions/S-202-proposed.normalized.json
+data/laws/food-and-drugs-act/versions/S-202-diff.json
 data/bills/45-1/S-202/amendments.json
-data/laws/Food-and-Drugs-Act/current.xml
-data/laws/Food-and-Drugs-Act/current.normalized.json
-data/laws/Food-and-Drugs-Act/versions/S-202-proposed.normalized.json
-data/laws/Food-and-Drugs-Act/versions/S-202-diff.json
 ```
