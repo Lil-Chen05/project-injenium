@@ -17,10 +17,10 @@ export function Sidebar({
   return (
     <aside className="sb">
       <div className="sb-brand">
-        <div className="sb-mark">Rd</div>
+        <div className="sb-mark">In</div>
         <div>
           <div className="sb-name">
-            <b>RegDelta</b>
+            <b>Injenium</b>
           </div>
           <div
             style={{
@@ -57,7 +57,7 @@ export function Sidebar({
             <div className="sb-user-role">Senior Counsel · Privacy</div>
           </div>
         </div>
-        <div className="sb-build">RegDelta · MVP</div>
+        <div className="sb-build">Injenium · MVP</div>
       </div>
     </aside>
   );
