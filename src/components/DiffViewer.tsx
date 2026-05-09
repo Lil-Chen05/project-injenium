@@ -278,7 +278,7 @@ export function DiffViewer({
                   title="Click to expand"
                 >
                   {b.paragraphs.length} identical paragraph
-                  {b.paragraphs.length === 1 ? "" : "s"} · click to expand
+                  {b.paragraphs.length === 1 ? "" : "s"}
                 </div>
               );
             }
