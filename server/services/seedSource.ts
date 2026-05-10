@@ -677,7 +677,7 @@ type CannedImpact = Omit<
 >;
 
 export const CANNED_IMPACTS: Record<string, CannedImpact> = {
-  "client-eventpour-technologies": {
+  "client-eventpour-technologies|S-202": {
     affected: "yes",
     impactLevel: "medium",
     urgency: "medium",
@@ -745,7 +745,7 @@ export const CANNED_IMPACTS: Record<string, CannedImpact> = {
       "Form/manner of the prescribed label is delegated to regulations not yet published; coming-into-force date depends on Royal Assent.",
   },
 
-  "client-maplecellars-marketplace": {
+  "client-maplecellars-marketplace|S-202": {
     affected: "yes",
     impactLevel: "high",
     urgency: "high",
@@ -820,7 +820,7 @@ export const CANNED_IMPACTS: Record<string, CannedImpact> = {
       "Whether MapleCellars qualifies as 'a person who sells' under s. 5.1 turns on legal interpretation of marketplace mechanics; awaiting regulations on prescribed label form.",
   },
 
-  "client-north-river-brewing": {
+  "client-north-river-brewing|S-202": {
     affected: "yes",
     impactLevel: "high",
     urgency: "high",
@@ -911,5 +911,218 @@ export const CANNED_IMPACTS: Record<string, CannedImpact> = {
     humanReviewRequired: true,
     humanReviewReason:
       "Implementation depends on regulations on prescribed form/manner and on coordination with provincial liquor regimes; legal interpretation required.",
+  },
+
+  "client-bayer-inc|C-273": {
+    affected: "yes",
+    impactLevel: "high",
+    urgency: "high",
+    timing:
+      "Bill C-273 is at first reading in the House of Commons. Coming-into-force is on a day to be fixed by order of the Governor in Council, and most operative thresholds (trusted-jurisdiction list, provisional-registration criteria, prescribed conditions) are deferred to regulations. Bayer should begin scenario planning now: regulatory affairs, R&D portfolio sequencing, and product launch calendars all need optionality for a near-term provisional-authorization route into the Canadian market.",
+    whyItAffectsClient:
+      "Bill C-273 amends every federal statute under which Bayer Crop Science operates in Canada — the Feeds Act, Fertilizers Act, Seeds Act, Pest Control Products Act, and s. 30.06(1) of the Food and Drugs Act (now extended to veterinary drugs and classes thereof). Bayer commercialises genetically modified seeds and traits, herbicides, fungicides, insecticides, and digital/precision-agriculture tools across all of these regimes. The bill creates two structural shifts that materially benefit Bayer: (1) a 'trusted jurisdiction' route under which a product already approved or registered abroad (e.g., by the EPA, EFSA, or APHIS) may be manufactured, sold, or imported in Canada under prescribed conditions, and (2) a provisional approval/registration regime (up to two years, extendable by one) that lets a product reach market while the final dossier is under review. As the example with Nutrien indicates, where a compound has already been approved in trusted jurisdictions, Bayer can leverage a provisional authorization for immediate commercial value without first obtaining a permanent authorization. The trade-off is adapted application processes that will reshape product launches and R&D sequencing, plus continuing exposure to a final-decision step that can refuse, condition, or extend the provisional grant.",
+    affectedClientAreas: [
+      "Regulatory affairs (Crop Science)",
+      "R&D portfolio sequencing",
+      "Seed variety registration pipeline",
+      "Pest control product registration pipeline",
+      "Trait and biotechnology submissions",
+      "Veterinary drug submissions (s. 30.06(1) scope expansion)",
+      "Trusted-jurisdiction reliance strategy",
+      "Commercial launch calendars and supply planning",
+      "Stewardship and post-market surveillance commitments",
+    ],
+    requiredAdaptations: [
+      {
+        area: "Provisional authorization playbook",
+        currentIssue:
+          "Bayer's Canadian regulatory submissions today are built around the existing single-stage registration pathways under the Feeds, Fertilizers, Seeds, and Pest Control Products Acts; there is no internal SOP for a two-stage provisional/final regime.",
+        recommendation:
+          "Stand up a cross-act provisional-authorization playbook that defines (i) the dossiers and risk evidence needed to obtain a provisional under ss. 5.21/5.22 (Feeds, Fertilizers), s. 4.1/4.2 (Seeds), and s. 7.1/7.2 (PCPA); (ii) the milestones for converting provisional to final before expiry; and (iii) the contingency if the Minister extends rather than grants final.",
+        reason:
+          "Provisional authorization is the most material commercial benefit in C-273. A documented playbook lets Crop Science move first the moment regulations are published.",
+      },
+      {
+        area: "Trusted-jurisdiction reliance strategy",
+        currentIssue:
+          "Bayer's submissions are not currently structured to leverage a trusted-jurisdiction reliance route into Canada; there is no internal mapping of which existing US/EU/UK approvals could be invoked under Feeds Act s. 3(1.1), Fertilizers Act s. 3(1.1), Seeds Act s. 4.3, or PCPA s. 7.3.",
+        recommendation:
+          "Build a portfolio-wide map of Bayer's US (EPA, USDA-APHIS, FDA-CVM), EU (EFSA, ECHA), and UK (HSE, APHA) approvals and triage which products would qualify the moment Canada designates each as a trusted jurisdiction. Coordinate with global regulatory teams so the Canadian filing references the foreign decision packet directly.",
+        reason:
+          "The trusted-jurisdiction route is the second material commercial benefit; readiness is a sequencing advantage when the trusted-jurisdiction list is prescribed.",
+      },
+      {
+        area: "R&D and launch sequencing",
+        currentIssue:
+          "Existing Canadian launch calendars assume a single, terminal registration date per SKU; provisional authorization changes the gating step and the post-launch obligations.",
+        recommendation:
+          "Re-baseline launch calendars and stewardship plans to reflect a provisional-then-final cadence. Tie commercial commitments (volume forecasts, distributor agreements, label printing) to the provisional milestone with a hard checkpoint at the final decision date.",
+        reason:
+          "If commercial commitments outrun the provisional grant and the Minister later refuses or conditions the final, the recall and supply-chain exposure is significant.",
+      },
+      {
+        area: "Veterinary drug pathway via s. 30.06(1)",
+        currentIssue:
+          "Bayer's animal-health products historically rely on Health Canada's standard veterinary-drug pathway; the expansion of s. 30.06(1) to cover 'a veterinary drug or a class of either of them' is new optionality that is not yet reflected in submission strategy.",
+        recommendation:
+          "Identify Bayer veterinary products with an existing decision from a designated foreign regulatory authority and prepare submissions that ask the Minister to use the s. 30.06(1) deeming power to import that decision into Canada.",
+        reason:
+          "Where a foreign decision already exists, the deeming order is the fastest route to market — but the Minister's order is discretionary and class-scoped, so the strategy needs a curated list, not a blanket request.",
+      },
+      {
+        area: "Stewardship and post-market commitments",
+        currentIssue:
+          "Provisional registrations under each act are tied to prescribed conditions and to a final-decision checkpoint; post-market data-collection obligations are likely to be heavier than under the existing standard pathway.",
+        recommendation:
+          "Define an internal stewardship template (data collection, adverse-event reporting cadence, real-world evidence) sized for the provisional period so the final-decision dossier is ready before expiry.",
+        reason:
+          "The Minister can refuse the final or extend the provisional; a strong real-world evidence record materially increases the probability of a clean final approval.",
+      },
+    ],
+    relevantClientText: [
+      {
+        source: "Operations",
+        excerpt:
+          "Bayer’s Canadian agricultural operations include the development, testing, and commercialization of seeds and crop protection products, as well as digital and precision agriculture technologies.",
+        issue:
+          "Every product line listed (seeds, crop protection, biotech traits) sits inside an act that C-273 amends. Provisional authorization and trusted-jurisdiction reliance apply across the whole portfolio.",
+      },
+      {
+        source: "Operations",
+        excerpt:
+          "Activities involve biotechnology and trait research, seed development and distribution, herbicide and pesticide product management, field trials, agronomic advisory services, and data-driven farming tools.",
+        issue:
+          "Field trials and trait research feed the registration pipeline; the new provisional-then-final cadence changes how trial timelines must align with submission dates.",
+      },
+      {
+        source: "Industry",
+        excerpt:
+          "Genetically modified seeds and plant traits; Crop protection products (herbicides, fungicides, insecticides); Agricultural biotechnology and data-driven farming technologies.",
+        issue:
+          "Crop-protection products fall under the Pest Control Products Act amendments (provisional registration ss. 7.1/7.2, trusted-jurisdiction reliance s. 7.3, regs in s. 67(1)(z.6)–(z.7), coordination arrangements s. 80.1).",
+      },
+    ],
+    lawyerVerificationQuestions: [
+      "Confirm which Bayer Canadian SKUs already have qualifying approvals in jurisdictions likely to be designated as 'trusted jurisdictions' (US, EU, UK, AUS, NZ, JPN).",
+      "Confirm whether Bayer's existing label and stewardship infrastructure can satisfy 'prescribed conditions' likely to attach to a trusted-jurisdiction route.",
+      "Confirm whether s. 30.06(1) deeming orders for veterinary drugs can be requested per-class or only per-product, and the scope of regulator discretion to refuse.",
+      "Confirm Bayer's contractual commitments to distributors and customers can be conditioned on the provisional-final cadence (e.g., termination/cure rights if a final decision refuses or attaches new conditions).",
+      "Confirm Quebec interaction: are there provincial overlays on pesticide use or seed registration that would survive a federal trusted-jurisdiction route?",
+    ],
+    emailDraft: {
+      subject:
+        "Bill C-273 (Facilitating Agricultural Regulatory Modernization Act) — Bayer exposure: high impact, high urgency",
+      body: "Hi team,\n\nSummary of the C-273 client-impact analysis for Bayer Inc. (Crop Science):\n\n- Affected: yes (directly — every act under which Crop Science operates is amended)\n- Impact level: high\n- Urgency: high (act now to capture provisional-authorization and trusted-jurisdiction benefits)\n\nKey exposure / opportunity: C-273 amends the Feeds Act, Fertilizers Act, Seeds Act, Pest Control Products Act, and s. 30.06(1) of the Food and Drugs Act (now extended to veterinary drugs). Two structural benefits stand out: (1) a provisional approval/registration valid up to two years (extendable by one) that lets products reach market while the final dossier is under review, and (2) a trusted-jurisdiction reliance route under which products already approved abroad can be manufactured, sold or imported in Canada under prescribed conditions. The downsides are heavier post-market data obligations and a discretionary final-decision step that can refuse, condition, or extend.\n\nRecommended next steps:\n1. Stand up a cross-act provisional-authorization playbook (Feeds ss. 5.21/5.22; Fertilizers ss. 5.21/5.22; Seeds ss. 4.1/4.2; PCPA ss. 7.1/7.2).\n2. Build a portfolio-wide map of existing US/EU/UK approvals and triage which qualify under Feeds s. 3(1.1), Fertilizers s. 3(1.1), Seeds s. 4.3, PCPA s. 7.3.\n3. Re-baseline launch calendars and distributor agreements around a provisional-then-final cadence.\n4. Curate a list of veterinary drugs and classes for s. 30.06(1) deeming-order requests, leveraging existing foreign decisions.\n5. Define a stewardship template sized for the provisional period so the final-decision dossier is ready before expiry.\n\nFlagged for human review: trusted-jurisdiction list, provisional-registration criteria, and prescribed conditions are all deferred to regulations not yet published; coming-into-force is at the Governor in Council's discretion.\n\n— Igenium",
+    },
+    confidence: 0.86,
+    humanReviewRequired: true,
+    humanReviewReason:
+      "Operative thresholds (trusted-jurisdiction list, provisional-registration criteria, prescribed conditions, coming-into-force date) are deferred to regulations and to the Governor in Council; legal interpretation required to size the benefit and timing per product line.",
+  },
+
+  "client-canneberges-bieler|C-273": {
+    affected: "yes",
+    impactLevel: "high",
+    urgency: "high",
+    timing:
+      "Bill C-273 is at first reading in the House of Commons. Coming-into-force is on a day fixed by order of the Governor in Council. Canneberges Bieler should begin agronomic-protocol scenario planning now: cranberry growers depend on a relatively narrow and slow-moving toolbox of registered pest control products, fertilizers, and seed/cultivar inputs, and the trusted-jurisdiction and provisional-registration routes will materially change which inputs are available, when, and on what terms — across one or more upcoming growing seasons.",
+    whyItAffectsClient:
+      "Canneberges Bieler is a primary producer in the soft-fruit / horticultural sector and depends directly on inputs regulated by every act C-273 amends. Cranberry production uses pest control products under the Pest Control Products Act (fungicides for fruit-rot complexes, insecticides for cranberry fruitworm and weevil, herbicides for bog weed management); fertilizers and supplements under the Fertilizers Act applied through engineered bog systems; certified seed and cultivar inputs under the Seeds Act; and any feed inputs used in adjacent operations under the Feeds Act. The new trusted-jurisdiction reliance routes (PCPA s. 7.3; Fertilizers s. 3(1.1); Seeds s. 4.3) and the provisional registration regimes (PCPA ss. 7.1/7.2; Fertilizers ss. 5.21/5.22; Seeds ss. 4.1/4.2) mean inputs already registered in trusted jurisdictions (e.g., the US for cranberry-specific products) could become available in Canada faster, and existing registrations could be supplemented by provisional grants for new actives. Net effect: a wider, faster-moving input toolbox, with a corresponding obligation to update agronomic protocols, supplier validation, residue/MRL alignment for downstream processors and cooperatives such as Ocean Spray, and stewardship recordkeeping.",
+    affectedClientAreas: [
+      "Agronomic protocols (pest control product use)",
+      "Input procurement and supplier validation",
+      "Fertilizer and supplement programs for engineered bog systems",
+      "Seed/cultivar selection",
+      "Residue and MRL alignment with downstream processors (e.g., Ocean Spray)",
+      "Pesticide application records and stewardship",
+      "Sustainability and land-stewardship reporting",
+      "Worker training (label compliance, re-entry intervals)",
+    ],
+    requiredAdaptations: [
+      {
+        area: "Agronomic protocol refresh",
+        currentIssue:
+          "Existing crop-protection and fertility programs are anchored to today's set of registered products; they do not include decision rules for evaluating products that come to market under a provisional registration or via trusted-jurisdiction reliance.",
+        recommendation:
+          "Update the agronomic SOP to cover (i) when a provisionally-registered product may be incorporated into the rotation; (ii) what additional record-keeping is required while a registration is provisional; and (iii) a fallback if the Minister refuses the final registration or attaches new conditions before expiry.",
+        reason:
+          "Bringing a provisionally-registered product into the bog without a documented protocol creates exposure if the final decision changes the registration or attaches new conditions.",
+      },
+      {
+        area: "Supplier and input validation",
+        currentIssue:
+          "Procurement validates inputs based on Canadian PMRA / CFIA registration numbers; there is no process for products marketed in Canada under the trusted-jurisdiction reliance route.",
+        recommendation:
+          "Extend input validation to capture the underlying foreign registration (regulator, registration number, expiry) when a product is sold in Canada under PCPA s. 7.3, Fertilizers Act s. 3(1.1), or Seeds Act s. 4.3, and confirm that any prescribed conditions (e.g., labelling, distribution restrictions) are met.",
+        reason:
+          "Trusted-jurisdiction products will carry conditions imposed by Canadian regulations rather than by an independent Canadian assessment; the grower bears compliance risk.",
+      },
+      {
+        area: "MRL and residue alignment with processors",
+        currentIssue:
+          "Cooperative and processor contracts (Ocean Spray and others) require harvested cranberries to meet specified residue and MRL profiles; some buyers require a list of permitted active ingredients narrower than the federal registration list.",
+        recommendation:
+          "Before adopting any new provisional or trusted-jurisdiction product, confirm in writing with each downstream buyer that the active ingredient and residue profile are accepted. Maintain a per-buyer permitted-input list synchronised with the federal registration status.",
+        reason:
+          "Federal eligibility under C-273 does not override private contractual or export MRL requirements; a faster Canadian path can outpace the slower buyer-acceptance process.",
+      },
+      {
+        area: "Provisional-product stewardship records",
+        currentIssue:
+          "Existing pesticide application logs are sized for fully-registered products; provisional registrations are likely to attract heavier post-market data and reporting obligations.",
+        recommendation:
+          "Add fields to the application log capturing whether a product is provisionally registered, the provisional-grant expiry, the dataset being captured for post-market evidence, and a calendar reminder before expiry.",
+        reason:
+          "If the Minister extends or refuses the final registration, Canneberges Bieler needs an audit-ready evidence trail of how the product was used during the provisional period.",
+      },
+      {
+        area: "Worker training and re-entry intervals",
+        currentIssue:
+          "Worker training is built around current label language; provisional and trusted-jurisdiction products may carry different label conventions (e.g., labels written for the foreign regulator's framework).",
+        recommendation:
+          "Refresh worker training and PPE/re-entry protocols when introducing any provisional or trusted-jurisdiction product; verify the operative label complies with Canadian prescribed conditions before first use.",
+        reason:
+          "Mis-application risk rises when label conventions differ from the existing baseline; this is also the area most likely to be inspected.",
+      },
+    ],
+    relevantClientText: [
+      {
+        source: "Operations",
+        excerpt:
+          "Cultivation of cranberries in engineered bog systems, seasonal harvesting activities such as flooding and berry collection, and post-harvest handling including storage and transport.",
+        issue:
+          "Bog cultivation depends directly on PCPA-regulated pest control products and Fertilizers-Act-regulated fertility inputs; both are reshaped by C-273.",
+      },
+      {
+        source: "Operations",
+        excerpt:
+          "Supply chain coordination with processors and distributors, and agronomic practices aimed at improving crop yield, operational efficiency, and environmental sustainability in cranberry production.",
+        issue:
+          "Processor contracts (Ocean Spray, others) drive permitted-input lists and residue profiles; trusted-jurisdiction and provisional inputs must be cleared with downstream buyers before adoption.",
+      },
+      {
+        source: "Industry",
+        excerpt:
+          "Specialty crop farming (horticulture); Cranberry cultivation and production; Post-harvest processing and agri-food supply chain integration; Primary agricultural production (soft fruit sector).",
+        issue:
+          "Specialty crops are particularly affected because the Canadian-specific registration pipeline is small; trusted-jurisdiction reliance materially expands the realistic input set.",
+      },
+    ],
+    lawyerVerificationQuestions: [
+      "Confirm which downstream buyers (Ocean Spray and others) accept actives registered in Canada solely on a provisional or trusted-jurisdiction basis, and at what residue thresholds.",
+      "Confirm Quebec provincial overlay: are there CRAAQ / MELCCFP rules on pesticide use that would survive a federal trusted-jurisdiction reliance route?",
+      "Confirm whether the operative label for a trusted-jurisdiction product satisfies Canadian worker-protection and re-entry-interval requirements without a Canadian re-labelling step.",
+      "Confirm whether existing crop insurance and lender covenants restrict the use of provisionally-registered or trusted-jurisdiction inputs.",
+      "Confirm record-keeping retention requirements for inputs used during a provisional registration period if the Minister later refuses the final.",
+    ],
+    emailDraft: {
+      subject:
+        "Bill C-273 (Facilitating Agricultural Regulatory Modernization Act) — Canneberges Bieler exposure: high impact, high urgency",
+      body: "Hi team,\n\nSummary of the C-273 client-impact analysis for Canneberges Bieler Inc.:\n\n- Affected: yes (directly — cranberry production depends on inputs regulated by every act C-273 amends)\n- Impact level: high\n- Urgency: high (decisions are needed before the next growing season once regulations are prescribed)\n\nKey exposure / opportunity: C-273 introduces trusted-jurisdiction reliance and provisional registrations under the Pest Control Products Act, Fertilizers Act, and Seeds Act. For a specialty crop like cranberry — where the Canadian-specific registration pipeline is small and downstream buyers (Ocean Spray and others) drive permitted-input lists — this materially expands the realistic input toolbox while shifting compliance and stewardship obligations onto the grower.\n\nRecommended next steps:\n1. Refresh agronomic SOPs to handle provisional and trusted-jurisdiction products (decision rules, recordkeeping, fallback if final decision changes).\n2. Extend input validation to capture the underlying foreign registration when a product is sold in Canada via PCPA s. 7.3, Fertilizers s. 3(1.1) or Seeds s. 4.3.\n3. Confirm in writing with Ocean Spray and other buyers that any new provisional or trusted-jurisdiction active is accepted and meets residue/MRL profiles.\n4. Add provisional-grant fields to pesticide application logs (expiry, post-market data captured, expiry reminder).\n5. Refresh worker training when introducing inputs whose labels were written for a foreign regulator.\n\nFlagged for human review: trusted-jurisdiction list, provisional-registration criteria, and prescribed conditions are deferred to regulations; Quebec provincial overlay on pesticide use must be confirmed; downstream buyer acceptance is contractual, not federal, and may lag the regulatory change.\n\n— Igenium",
+    },
+    confidence: 0.84,
+    humanReviewRequired: true,
+    humanReviewReason:
+      "Operative thresholds and the trusted-jurisdiction list are deferred to regulations; Quebec provincial overlay and downstream buyer acceptance must be confirmed independently of the federal change.",
   },
 };

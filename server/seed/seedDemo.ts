@@ -88,10 +88,12 @@ export async function seedDemo() {
 }
 
 /**
- * Look up a canned impact analysis for the (clientId, lawVersionId) pair.
- * The cold demo is seeded for S-202 + Food and Drugs Act × the three demo
- * clients. Anything else returns null and the route should fall through to
- * the live Gemini call (or surface that GEMINI_API_KEY is required).
+ * Look up a canned impact analysis for the (client, bill) pair.
+ *
+ * Canned impacts are keyed by `${clientId}|${billNumber}` because a single
+ * client may have a different impact analysis per bill (e.g. EventPour for
+ * S-202 vs Bayer for C-273). Returning null means the route should fall
+ * through to the live Gemini call.
  */
 export function findCannedImpact(args: {
   clientId: string;
@@ -100,13 +102,8 @@ export function findCannedImpact(args: {
   ClientImpactAnalysis,
   "id" | "clientId" | "lawVersionId" | "saved" | "createdAt"
 > | null {
-  if (
-    args.lawVersion.sourceBillNumber !== HEADLINING_BILL_NUMBER ||
-    args.lawVersion.baseLawId !== HEADLINING_LAW_SLUG
-  ) {
-    return null;
-  }
-  return CANNED_IMPACTS[args.clientId] ?? null;
+  const key = `${args.clientId}|${args.lawVersion.sourceBillNumber}`;
+  return CANNED_IMPACTS[key] ?? null;
 }
 
 export async function findBaseLawForBill(billId: string): Promise<BaseLaw | null> {
